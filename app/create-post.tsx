@@ -27,18 +27,21 @@ export default function CreatePostScreen() {
     setLoading(true);
     try {
       const newPost = await api.createPost({
-        title,
-        body,
-        userId: 1, // Using a default userId since we don't have authentication
+        title: title.trim(),
+        body: body.trim(),
+        userId: 1,
       });
       
-      // Pass the new post back to the posts list
+      // Use push instead of replace and ensure the params are properly passed
       router.push({
-        pathname: '/(tabs)',
-        params: { newPost: JSON.stringify(newPost) }
+        pathname: '/',
+        params: {
+          newPost: JSON.stringify(newPost),
+          timestamp: Date.now().toString()
+        }
       });
     } catch (error) {
-      Alert.alert('Error', error instanceof Error ? error.message : 'Failed to create post');
+      Alert.alert('Error', 'Failed to create post');
     } finally {
       setLoading(false);
     }
